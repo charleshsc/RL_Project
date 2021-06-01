@@ -35,7 +35,7 @@ class ActorCritic(nn.Module):
         values = self.v(critic)
         return mu, sigma, values
 
-    def choose_action(self, s):
+    def select_action(self, s):
         self.training = False
         mu, sigma, _ = self.forward(s)
         m = self.distribution(mu, sigma)

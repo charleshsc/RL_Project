@@ -1,5 +1,7 @@
 import os
 import shutil
+
+import numpy as np
 import torch
 from collections import OrderedDict
 import glob
@@ -29,3 +31,6 @@ class Saver(object):
         for key in vars(args):
             log_file.write(key + ':' + str(getattr(args, key)) + '\n')
         log_file.close()
+
+    def save_evaluation(self, evaluation, filename='evaluation.npy'):
+        np.save(os.path.join(self.experiment_dir, filename), evaluation)

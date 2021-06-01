@@ -21,11 +21,13 @@ def obtain_env_args():
     save = experiment_dir
 
     parser = argparse.ArgumentParser(description="RL")
-    parser.add_argument('--env_name', type=str, default="Humanoid-v2", choices=["Humanoid-v2"])
+    parser.add_argument('--env_name', type=str, default="HalfCheetah-v2", choices=["Humanoid-v2","HalfCheetah-v2"])
     parser.add_argument('--save', type=str, default=save)
     parser.add_argument('--checkpoint',type=str,default=None)
+    parser.add_argument('--algorithm',type=str,default='A3C',choices=['A3C','TD3'])
 
     args = parser.parse_args()
+    args.env_name = os.path.join(root_dir,'config',args.env_name)
     return args
 
 args = obtain_env_args()
