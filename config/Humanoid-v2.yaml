@@ -1,0 +1,13 @@
+env_name: Humanoid-v2
+min_action_value: -0.4000000059604645
+max_action_value: 0.4000000059604645
+action_dimention: 17
+state_dimention: 376
+max_epochs: 3000
+max_epoch_steps: 200
+update_global_iter: 5
+lr: 0.0001
+tau: 0.02
+capacity: 10000
+batch_size: 32
+gamma: 0.9
