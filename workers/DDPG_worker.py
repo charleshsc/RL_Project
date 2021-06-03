@@ -20,11 +20,11 @@ class DDPG(object):
     ):
 
 
-        self.actor = Actor(state_dim, action_dim, max_action)
+        self.actor = Actor(state_dim, action_dim, max_action).to(device)
         self.actor_target = copy.deepcopy(self.actor)
         self.actor_optim = torch.optim.Adam(self.actor.parameters(), lr=lr)
 
-        self.critic = Critic(state_dim, action_dim)
+        self.critic = Critic(state_dim, action_dim).to(device)
         self.critic_target = copy.deepcopy(self.critic)
         self.critic_optim = torch.optim.Adam(self.critic.parameters(),lr=lr)
 
