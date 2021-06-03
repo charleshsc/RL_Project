@@ -1,3 +1,10 @@
+env_name: HalfCheetah-v2
+min_action_value: -1
+max_action_value: 1
+action_dimention: 6
+state_dimention: 17
+seed: 0
+
 A3C:
   env_name: HalfCheetah-v2
   min_action_value: -1

@@ -6,7 +6,7 @@ from optim.SharedAdam import SharedAdam
 
 
 def A3C_Trainer(logger, saver, cfg_dict, checkpoint):
-    global_net = ActorCritic(cfg_dict.get('state_dimention'), cfg_dict.get('action_dimention'))
+    global_net = ActorCritic(cfg_dict.get('state_dimention'), cfg_dict.get('action_dimention'), cfg_dict.get('max_action_value'))
     global_net.share_memory() # share the global parameters in multiprocessing
     optimizer = SharedAdam(global_net.parameters(), lr=cfg_dict.get('lr'), betas=(0.95, 0.999))
     global_ep, global_ep_r, res_queue = mp.Value('i',0), mp.Value('d',0) , mp.Queue()

@@ -19,7 +19,7 @@ class A3C_Worker(mp.Process):
         self.name = 'Worker_%i' % name
         self.global_epoch, self.global_epoch_r, self.res_queue = global_epoch, global_epoch_r, res_queue
         self.global_net, self.opt = gnet, opt
-        self.local_net = ActorCritic(self.state_dimention, self.action_dimention)
+        self.local_net = ActorCritic(self.state_dimention, self.action_dimention, self.max_action_value)
         self.env = gym.make(self.env_name).unwrapped
         self.cfg_dict = cfg_dict
         self.min_action_value = cfg_dict.get('min_action_value')
@@ -40,7 +40,7 @@ class A3C_Worker(mp.Process):
                 if self.name == 'Worker_0':
                     self.env.render()
                 a = self.local_net.select_action(torch.tensor(s[None,:],dtype=torch.float))
-                s_, r, done, _ = self.env.step(a.clip(self.min_action_value,self.max_action_value))
+                s_, r, done, _ = self.env.step(a)
                 if t == self.cfg_dict.get('max_epoch_steps') - 1:
                     done = True
                 ep_r += r

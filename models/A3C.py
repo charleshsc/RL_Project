@@ -10,7 +10,7 @@ import torch.multiprocessing as mp
 
 
 class ActorCritic(nn.Module):
-    def __init__(self, in_channels = 3, out_channels = 1):
+    def __init__(self, in_channels = 3, out_channels = 1, max_action=1):
         super(ActorCritic, self).__init__()
         self._in_channels = in_channels
         self._out_channels = out_channels
@@ -26,6 +26,7 @@ class ActorCritic(nn.Module):
         self._initialize_weights()
 
         self.distribution = torch.distributions.Normal # 正态分布
+        self.max_action = max_action
 
     def forward(self, x):
         actor = F.relu6(self.actor_linear(x))
@@ -39,7 +40,7 @@ class ActorCritic(nn.Module):
         self.training = False
         mu, sigma, _ = self.forward(s)
         m = self.distribution(mu, sigma)
-        return m.sample().numpy()  #动作空间是连续的
+        return m.sample().numpy().clip(self.min_action_value,self.max_action_value)  #动作空间是连续的
 
     def loss_(self, s, a, v_t):
         # s: (bs,376), a: (bs,17), v_t: (bs,1)

@@ -28,6 +28,9 @@ def SAC_Trainer(logger, saver, cfg_dict, checkpoint):
     model = SAC(state_dimention, action_dimention, max_action_value, lr, discount, tau, log_std_max,
                 log_std_min, alpha, automatic_entropy_tuning)
 
+    if checkpoint  is not None:
+        model.load(checkpoint)
+
     # Set seeds
     env = gym.make(env_name)
     env.seed(seed)

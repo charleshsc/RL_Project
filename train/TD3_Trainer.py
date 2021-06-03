@@ -25,6 +25,8 @@ def TD3_Trainer(logger, saver, cfg_dict, checkpoint):
 
     model = TD3(state_dimention, action_dimention, max_action_value,discount,tau,policy_noise, noise_clip, policy_freq)
 
+    if checkpoint is not None:
+        model.load(checkpoint)
 
     # Set seeds
     env = gym.make(env_name)
