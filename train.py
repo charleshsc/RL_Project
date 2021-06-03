@@ -26,5 +26,7 @@ if __name__ == '__main__':
         TD3_Trainer(logger, saver, cfg_dict.get('TD3'), checkpoint)
     elif args.algorithm == 'SAC':
         SAC_Trainer(logger, saver, cfg_dict.get('SAC'), checkpoint)
+    elif args.algorithm == 'DDPG':
+        DDPG_Trainer(logger, saver, cfg_dict.get('DDPG'), checkpoint)
 
 
