@@ -17,11 +17,13 @@ class DQN(object):
             epsilon=1.0,
             epsilon_decay=0.995,
             target_update_step=100,
-            algo = 'DQN'
+            lr=1e-3,
+            algo = 'DQN',
+            eval_mode = False
     ):
         self.Q = DQN_model(state_dim, action_dim).to(device)
         self.Q_target = copy.deepcopy(self.Q)
-        self.Q_optimizer = torch.optim.Adam(self.Q.parameters(), lr=1e-3)
+        self.Q_optimizer = torch.optim.Adam(self.Q.parameters(), lr=lr)
 
         self.action_dim = action_dim
         self.discount = discount
@@ -29,11 +31,16 @@ class DQN(object):
         self.epsilon_decay = epsilon_decay
         self.target_update_step = target_update_step
         self.algo = algo
+        self.eval_mode = eval_mode
 
         self.total_it = 0
 
     def select_action(self, state):
         state = torch.FloatTensor(state.reshape(1, -1)).to(device)
+
+        if self.eval_mode:
+            action = self.Q(state).argmax()
+            return action.detach().cpu().numpy()
 
         self.epsilon *= self.epsilon_decay
         self.epsilon = max(self.epsilon, 0.01)

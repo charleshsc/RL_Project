@@ -38,4 +38,9 @@ if __name__ == '__main__':
         net = DDPG(state_dim, action_dim, max_action)
         net.load(checkpoint)
         eval_policy(net, env_name, seed, is_render=True)
+    elif args.algorithm == 'DQN':
+        net = DQN(state_dim, action_dim)
+        net.load(checkpoint)
+        net.eval_mode = True
+        eval_policy(net, env_name, seed, is_render=True)
 

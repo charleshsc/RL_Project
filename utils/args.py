@@ -20,11 +20,27 @@ def obtain_env_args():
 
     save = experiment_dir
 
+    env_choices = [
+        "Humanoid-v2",
+        "HalfCheetah-v2",
+        "VideoPinball-ramNoFrameskip-v4",
+        "Ant-v2",
+        "Hopper-v2"
+    ]
+
+    algorithm_choices = [
+        'A3C',
+        'TD3',
+        'SAC',
+        'DDPG',
+        'DQN'
+    ]
+
     parser = argparse.ArgumentParser(description="RL")
-    parser.add_argument('--env_name', type=str, default="Humanoid-v2", choices=["Humanoid-v2","HalfCheetah-v2"])
+    parser.add_argument('--env_name', type=str, default="VideoPinball-ramNoFrameskip-v4", choices=env_choices)
     parser.add_argument('--save', type=str, default=save)
     parser.add_argument('--checkpoint',type=str,default=None)
-    parser.add_argument('--algorithm',type=str,default='SAC',choices=['A3C','TD3','SAC','DDPG'])
+    parser.add_argument('--algorithm',type=str,default='DQN', choices=algorithm_choices)
 
     args = parser.parse_args()
     args.env_name = os.path.join(root_dir,'config',args.env_name)

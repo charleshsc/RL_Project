@@ -4,41 +4,38 @@ import numpy as np
 
 from utils.utils import ReplayBuffer
 from eval.eval import eval_policy
-from workers.SAC_worker import SAC
+from workers.DQN_worker import DQN
+from utils.atari_wrapper import wrap_deepmind
 
-def SAC_Trainer(logger, saver, cfg_dict, checkpoint):
-    # init
-    state_dimention = cfg_dict.get('state_dimention', 17)
-    action_dimention = cfg_dict.get('action_dimention', 6)
-    max_action_value = cfg_dict.get('max_action_value', 1)
-    seed = cfg_dict.get('seed', 0)
+def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
     env_name = cfg_dict.get('env_name')
+    action_dimention = cfg_dict.get('action_dimention', 6)
+    state_dimention = cfg_dict.get('state_dimention', 17)
+    capacity = cfg_dict.get('capacity', 1000000)
+    batch_size = cfg_dict.get('batch_size', 256)
+    seed = cfg_dict.get('seed', 0)
     start_timesteps = cfg_dict.get('start_timesteps', 25000)
     eval_freq = cfg_dict.get('eval_freq', 5000)
     max_timesteps = cfg_dict.get('max_timesteps', 1000000)
-    batch_size = cfg_dict.get('batch_size', 256)
     discount = cfg_dict.get('discount', 0.99)
-    tau = cfg_dict.get('tau', 0.005)
-    lr = cfg_dict.get('lr', 3e-4)
-    log_std_max = cfg_dict.get('log_std_max', 2)
-    log_std_min = cfg_dict.get('log_std_min', -20)
-    alpha = cfg_dict.get('alpha', 0.2)
-    automatic_entropy_tuning = cfg_dict.get('automatic_entropy_tuning', 0)
+    lr = cfg_dict.get('lr',1e-3)
+    epsilon = cfg_dict.get('epsilon', 1)
+    epsilon_decay = cfg_dict.get('epsilon_decay', 0.995)
+    target_update_step = cfg_dict.get('target_update_step', 100)
+    algo = cfg_dict.get('algo', 'DQN')
 
-    model = SAC(state_dimention, action_dimention, max_action_value, lr, discount, tau, log_std_max,
-                log_std_min, alpha, automatic_entropy_tuning)
+    model = DQN(state_dimention, action_dimention, discount, epsilon, epsilon_decay, target_update_step, lr, algo)
 
-    if checkpoint  is not None:
+    if checkpoint is not None:
         model.load(checkpoint)
 
-    # Set seeds
     env = gym.make(env_name)
     env.seed(seed)
     env.action_space.seed(seed)
     torch.manual_seed(seed)
     np.random.seed(seed)
 
-    replay_buffer = ReplayBuffer(state_dimention, action_dimention, cfg_dict.get('capacity'))
+    replay_buffer = ReplayBuffer(state_dimention, action_dimention, capacity)
 
     model.eval_mode = True
     evaluations = [eval_policy(model, env_name, seed)]
@@ -54,10 +51,8 @@ def SAC_Trainer(logger, saver, cfg_dict, checkpoint):
         episode_timesteps += 1
 
         # Select action randomly or according to policy
-        if t < start_timesteps:
-            action = env.action_space.sample()
-        else:
-            action = model.select_action(state)
+
+        action = model.select_action(np.array(state))
 
         # Perform action
         next_state, reward, done, _ = env.step(action)
@@ -70,7 +65,7 @@ def SAC_Trainer(logger, saver, cfg_dict, checkpoint):
         episode_reward += reward
 
         # Train agent after collecting sufficient data
-        if t >= start_timesteps:
+        if t >= 300:
             model.train(replay_buffer, batch_size)
 
         if done:

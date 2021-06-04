@@ -28,5 +28,6 @@ if __name__ == '__main__':
         SAC_Trainer(logger, saver, cfg_dict.get('SAC'), checkpoint)
     elif args.algorithm == 'DDPG':
         DDPG_Trainer(logger, saver, cfg_dict.get('DDPG'), checkpoint)
-
+    elif args.algorithm == 'DQN':
+        DQN_Trainer(logger, saver, cfg_dict.get('DQN'), checkpoint)
 
