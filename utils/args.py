@@ -5,7 +5,7 @@ import os
 
 def obtain_env_args():
     abs_dir = osp.realpath(".")  # 当前的绝对位置
-    root_name = 'code'
+    root_name = 'RL_code'
     root_dir = abs_dir[:abs_dir.index(root_name) + len(root_name)]
     directory = osp.join(root_dir, 'run')
 
@@ -24,6 +24,7 @@ def obtain_env_args():
         "Humanoid-v2",
         "HalfCheetah-v2",
         "VideoPinball-ramNoFrameskip-v4",
+        "PongNoFrameskip-v4",
         "Ant-v2",
         "Hopper-v2"
     ]
@@ -37,7 +38,7 @@ def obtain_env_args():
     ]
 
     parser = argparse.ArgumentParser(description="RL")
-    parser.add_argument('--env_name', type=str, default="VideoPinball-ramNoFrameskip-v4", choices=env_choices)
+    parser.add_argument('--env_name', type=str, default="PongNoFrameskip-v4", choices=env_choices)
     parser.add_argument('--save', type=str, default=save)
     parser.add_argument('--checkpoint',type=str,default=None)
     parser.add_argument('--algorithm',type=str,default='DQN', choices=algorithm_choices)

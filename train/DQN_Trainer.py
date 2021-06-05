@@ -2,15 +2,15 @@ import torch
 import gym
 import numpy as np
 
-from utils.utils import ReplayBuffer
-from eval.eval import eval_policy
+from utils.utils import Atari_ReplayBuffer as ReplayBuffer
+from eval.eval import atari_eval_policy as eval_policy
 from workers.DQN_worker import DQN
-from utils.atari_wrapper import wrap_deepmind
+from utils.atari_wrapper import make_env
 
 def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
     env_name = cfg_dict.get('env_name')
     action_dimention = cfg_dict.get('action_dimention', 6)
-    state_dimention = cfg_dict.get('state_dimention', 17)
+    state_dimention = cfg_dict.get('state_dimention', 4)
     capacity = cfg_dict.get('capacity', 1000000)
     batch_size = cfg_dict.get('batch_size', 256)
     seed = cfg_dict.get('seed', 0)
@@ -30,18 +30,26 @@ def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
         model.load(checkpoint)
 
     env = gym.make(env_name)
+    env = make_env(env)
     env.seed(seed)
     env.action_space.seed(seed)
     torch.manual_seed(seed)
     np.random.seed(seed)
 
-    replay_buffer = ReplayBuffer(state_dimention, action_dimention, capacity)
+    replay_buffer = ReplayBuffer(state_dimention, 1, capacity)
 
     model.eval_mode = True
     evaluations = [eval_policy(model, env_name, seed)]
     model.eval_mode = False
 
+    def get_state(obs):
+        state = np.array(obs)
+        state = state.transpose((2, 0, 1))
+        return state
+
     state, done = env.reset(), False
+    state = get_state(state)
+
     episode_reward = 0
     episode_timesteps = 0
     episode_num = 0
@@ -52,11 +60,12 @@ def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
 
         # Select action randomly or according to policy
 
-        action = model.select_action(np.array(state))
+        action = model.select_action(np.array(state[None, :]))
 
         # Perform action
         next_state, reward, done, _ = env.step(action)
-        done_bool = float(done) if episode_timesteps < env._max_episode_steps else 0
+        next_state = get_state(next_state)
+        done_bool = float(done)
 
         # Store data in replay buffer
         replay_buffer.add(state, action, next_state, reward, done_bool)
@@ -74,6 +83,7 @@ def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
                 f"Total T: {t + 1} Episode Num: {episode_num + 1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
             # Reset environment
             state, done = env.reset(), False
+            state = get_state(state)
             episode_reward = 0
             episode_timesteps = 0
             episode_num += 1

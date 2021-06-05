@@ -6,12 +6,12 @@ import numpy as np
 
 from models.DQN import DQN_model
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 class DQN(object):
     def __init__(
             self,
-            state_dim,
+            state_channels,
             action_dim,
             discount = 0.99,
             epsilon=1.0,
@@ -21,7 +21,7 @@ class DQN(object):
             algo = 'DQN',
             eval_mode = False
     ):
-        self.Q = DQN_model(state_dim, action_dim).to(device)
+        self.Q = DQN_model(state_channels, action_dim).to(device)
         self.Q_target = copy.deepcopy(self.Q)
         self.Q_optimizer = torch.optim.Adam(self.Q.parameters(), lr=lr)
 
@@ -36,7 +36,7 @@ class DQN(object):
         self.total_it = 0
 
     def select_action(self, state):
-        state = torch.FloatTensor(state.reshape(1, -1)).to(device)
+        state = torch.FloatTensor(state).to(device)
 
         if self.eval_mode:
             action = self.Q(state).argmax()
