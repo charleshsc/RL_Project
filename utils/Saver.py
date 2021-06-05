@@ -15,13 +15,19 @@ class Saver(object):
             os.makedirs(self.experiment_dir)
         self.args = args
         self.save_experiment_config(args)
+        self.best_reward = 0
 
-    def save_checkpoint(self, state, filename='checkpoint.pth'):
+    def save_checkpoint(self, state, filename='checkpoint.pth', reward=0):
         """Saves checkpoint to disk"""
         if filename.split('.')[-1] != 'pth':
             filename = filename + '.pth'
         filename = os.path.join(self.experiment_dir, filename)
         torch.save(state, filename)
+
+        if reward > self.best_reward:
+            self.best_reward = reward
+            filename = os.path.join(self.experiment_dir, "best_model.pth")
+            torch.save(state, filename)
 
 
     def save_experiment_config(self, args):

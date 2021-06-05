@@ -27,9 +27,29 @@ This repository contains Pytorch implementation of RL.
 + Action space: 8
 
 ### VideoPinball-ramNoFrameskip-v4
+original observation space: (128,)
+
+Use the atari_wrapper 
++ Observation space: (84, 84, 4)
++ Action space: Discrete(9)
 ### BreakoutNoFrameskip-v4
+original observation space: (210, 160, 3)
+
+Use the atari_wrapper 
++ Observation space: (84, 84, 4)
++ Action space: Discrete(4)
 ### PongNoFrameskip-v4
+original observation space: (210, 160, 3)
+
+Use the atari_wrapper 
++ Observation space: (84, 84, 4)
++ Action space: Discrete(6)
 ### BoxingNoFrameskip-v4
+original observation space: (210, 160, 3)
+
+Use the atari_wrapper 
++ Observation space: (84, 84, 4)
++ Action space: Discrete(18)
 
 ## usage
 Train the agents on the environments:
@@ -38,4 +58,12 @@ python train.py \
         --algorithm TD3 \
         --env_name HalfCheetah-v2 \
         --checkpoint None 
+```
+
+Infer the agents on the environments:
+```angular2html
+python infer.py \
+        --algorithm TD3 \
+        --env_name HalfCheetah-v2 \
+        --checkpoint run/experiment_0/checkpoint.pth
 ```

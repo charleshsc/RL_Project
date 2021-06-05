@@ -88,5 +88,5 @@ def SAC_Trainer(logger, saver, cfg_dict, checkpoint):
             model.eval_mode = True
             evaluations.append(eval_policy(model, env_name, seed))
             saver.save_evaluation(evaluations)
-            saver.save_checkpoint(model.save())
+            saver.save_checkpoint(model.save(), reward=evaluations[-1])
             model.eval_mode = False

@@ -86,4 +86,4 @@ def TD3_Trainer(logger, saver, cfg_dict, checkpoint):
         if (t + 1) % eval_freq == 0:
             evaluations.append(eval_policy(model, env_name, seed))
             saver.save_evaluation(evaluations)
-            saver.save_checkpoint(model.save())
+            saver.save_checkpoint(model.save(), reward=evaluations[-1])
