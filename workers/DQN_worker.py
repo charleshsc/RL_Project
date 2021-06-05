@@ -6,7 +6,7 @@ import numpy as np
 
 from models.DQN import DQN_model
 
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class DQN(object):
     def __init__(

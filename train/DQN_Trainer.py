@@ -74,7 +74,7 @@ def DQN_Trainer(logger, saver, cfg_dict, checkpoint):
         episode_reward += reward
 
         # Train agent after collecting sufficient data
-        if t >= 300:
+        if t >= start_timesteps:
             model.train(replay_buffer, batch_size)
 
         if done:

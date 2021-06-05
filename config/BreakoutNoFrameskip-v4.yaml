@@ -1,11 +1,11 @@
-env_name: PongNoFrameskip-v4
-action_dimention: 6
+env_name: BreakoutNoFrameskip-v4
+action_dimention: 4
 state_dimention: 4
 seed: 0
 
 DQN:
-  env_name: PongNoFrameskip-v4
-  action_dimention: 6
+  env_name: BreakoutNoFrameskip-v4
+  action_dimention: 4
   state_dimention: 4
   capacity: 10000
   batch_size: 256

@@ -1,3 +1,4 @@
+import torch.cuda
 import yaml
 import os
 import time
@@ -19,6 +20,9 @@ if __name__ == '__main__':
 
     saver = Saver(args.save, args)
     checkpoint = args.checkpoint
+
+    if torch.cuda.is_available():
+        torch.cuda.set_device(args.gpu)
 
     if args.algorithm == 'A3C':
         A3C_Trainer(logger, saver, cfg_dict.get('A3C'), checkpoint)
