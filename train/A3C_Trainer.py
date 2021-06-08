@@ -25,3 +25,4 @@ def A3C_Trainer(logger, saver, cfg_dict, checkpoint):
     saver.save_checkpoint(state={
         'state_dict' : global_net.state_dict()
     },filename='final_model')
+    saver.save_evaluation(res)

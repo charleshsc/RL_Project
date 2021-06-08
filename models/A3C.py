@@ -10,7 +10,7 @@ import torch.multiprocessing as mp
 
 
 class ActorCritic(nn.Module):
-    def __init__(self, in_channels = 3, out_channels = 1, max_action=1):
+    def __init__(self, in_channels = 3, out_channels = 1, max_action_value=1):
         super(ActorCritic, self).__init__()
         self._in_channels = in_channels
         self._out_channels = out_channels
@@ -26,7 +26,7 @@ class ActorCritic(nn.Module):
         self._initialize_weights()
 
         self.distribution = torch.distributions.Normal # 正态分布
-        self.max_action = max_action
+        self. max_action_value =  max_action_value
 
     def forward(self, x):
         actor = F.relu6(self.actor_linear(x))
@@ -40,7 +40,7 @@ class ActorCritic(nn.Module):
         self.training = False
         mu, sigma, _ = self.forward(s)
         m = self.distribution(mu, sigma)
-        return m.sample().numpy().clip(self.min_action_value,self.max_action_value)  #动作空间是连续的
+        return m.sample().numpy().clip(-self. max_action_value,self. max_action_value)  #动作空间是连续的
 
     def loss_(self, s, a, v_t):
         # s: (bs,376), a: (bs,17), v_t: (bs,1)
@@ -50,7 +50,7 @@ class ActorCritic(nn.Module):
         c_loss = td.pow(2)
 
         m = self.distribution(mu, sigma)
-        log_prob = m.log_prob(a).prod(dim=-1).unsqueeze(-1) # 取动作a的概率对数 如果是多维度的话，直接全部相乘作为最后的概率 # (bs, 1)
+        log_prob = m.log_prob(a).sum(dim=-1).unsqueeze(-1) # 取动作a的概率对数 如果是多维度的话，直接全部相加作为最后的概率 # (bs, 1)
         entropy = 0.5 + 0.5 * math.log(2 * math.pi) + torch.log(m.scale) # exploration
         exp_v = log_prob * td.detach() + 0.005 * entropy
         a_loss = -exp_v

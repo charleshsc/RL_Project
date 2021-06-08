@@ -27,6 +27,7 @@ class Saver(object):
         if reward > self.best_reward:
             self.best_reward = reward
             filename = os.path.join(self.experiment_dir, "best_model.pth")
+            print("save the best model with reward %f" % reward)
             torch.save(state, filename)
 
 

@@ -11,7 +11,7 @@ A3C:
   max_action_value: 1
   action_dimention: 6
   state_dimention: 17
-  max_epochs: 1000
+  max_epochs: 100000
   max_epoch_steps: 1000
   update_global_iter: 10
   lr: 0.0001
