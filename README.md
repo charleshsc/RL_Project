@@ -6,7 +6,7 @@ The code corresponding to the training stage is mainly included in the model, wo
  if you want to add a new algorithm, you can follow these steps:
 1. put the main model code into models directory which only contains the class based on the nn.Module.
 2. put the agent containing the model in the workers directory. It is important to have `select_action` function and `train` function. In the 
-train function, there is no need to act the env and only contains the training data. So if using the replay buffer, the parameters for this function is the 
+   train function, there is no need to act the env and only contains the training data. So if using the replay buffer, the parameters for this function is the 
    `replay_buffer` and `batch_size`.
    
 3. put the environment setting and env step in the train directory.
@@ -78,7 +78,19 @@ python infer.py \
         --checkpoint run/experiment_0/checkpoint.pth
 ```
 
-目前已训练好的模型的参考代码:
+
+
+目前版本代码仅在下述环境能够训练成功：
+
+|      | Ant-v2 | HalfCheetah-v2 | Hopper-v2 | Humanoid-v2 |
+| ---- | ------ | -------------- | --------- | ----------- |
+| A3C  | ×      | ×              | ×         | ×           |
+| DDPG | ×      | √              | √         | ×           |
+| TD3  | √      | √              | √         | √           |
+| SAC  | √      | √              | √         | √           |
+
+参考指令为：
+
 ```angular2html
 python infer.py --algorithm DDPG --env_name HalfCheetah-v2 
 python infer.py --algorithm DDPG --env_name Hopper-v2
