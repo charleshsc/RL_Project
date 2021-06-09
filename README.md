@@ -1,4 +1,4 @@
-#Reinforcement Learning
+# Reinforcement Learning
 
 This repository contains Pytorch implementation of RL.
 
@@ -76,6 +76,30 @@ python infer.py \
         --algorithm TD3 \
         --env_name HalfCheetah-v2 \
         --checkpoint run/experiment_0/checkpoint.pth
+```
+
+目前已训练好的模型的参考代码:
+```angular2html
+python infer.py --algorithm DDPG --env_name HalfCheetah-v2 
+python infer.py --algorithm DDPG --env_name Hopper-v2
+python infer.py --algorithm TD3 --env_name Ant-v2
+python infer.py --algorithm TD3 --env_name HalfCheetah-v2
+python infer.py --algorithm TD3 --env_name Hopper-v2
+python infer.py --algorithm TD3 --env_name Humanoid-v2
+python infer.py --algorithm SAC --env_name Ant-v2
+python infer.py --algorithm SAC --env_name HalfCheetah-v2
+python infer.py --algorithm SAC --env_name Hopper-v2
+python infer.py --algorithm SAC --env_name Humanoid-v2
+```
+
+## Citations
+```angular2html
+@misc{hu2021TNTimple,
+	auther = 		{Shengchao Hu},
+	title = 		{RL_Project},
+	howpublished = 	        {\url{https://github.com/charleshsc/RL_Project}},
+	year = 			{2021}
+}
 ```
 
 ## Reference
